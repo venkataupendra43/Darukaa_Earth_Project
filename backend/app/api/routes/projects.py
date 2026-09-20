@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import func
@@ -65,13 +64,9 @@ def create_project(
     """Create a new environmental project."""
     project = Project(
         name=project_in.name.strip(),
-        description=project_in.description.strip()
-        if project_in.description
-        else None,
+        description=project_in.description.strip() if project_in.description else None,
         project_type=project_in.project_type.strip(),
-        location_name=project_in.location_name.strip()
-        if project_in.location_name
-        else None,
+        location_name=project_in.location_name.strip() if project_in.location_name else None,
         created_by=current_user.id,
     )
     db.add(project)

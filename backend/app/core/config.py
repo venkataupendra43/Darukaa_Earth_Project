@@ -30,10 +30,11 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             if v.startswith("[") and v.endswith("]"):
                 try:
-                    return json.loads(v)
-                except Exception:
-                    pass
-            return [i.strip() for i in v.split(",") if i.strip()]
+                    res = json.loads(v)
+                    if isinstance(res, list):
+                        return res
+                except (json.JSONDecodeError, TypeError, ValueError):
+                    return [i.strip() for i in v.split(",") if i.strip()]
         return v
 
     model_config = SettingsConfigDict(

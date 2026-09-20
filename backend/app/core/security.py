@@ -21,7 +21,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         pw_bytes = _truncate_password_bytes(plain_password)
         hash_bytes = hashed_password.encode("utf-8")
         return bcrypt.checkpw(pw_bytes, hash_bytes)
-    except Exception:
+    except (ValueError, TypeError, AttributeError):
         return False
 
 
@@ -32,9 +32,7 @@ def get_password_hash(password: str) -> str:
     return bcrypt.hashpw(pw_bytes, salt).decode("utf-8")
 
 
-def create_access_token(
-    subject: str | Any, expires_delta: timedelta | None = None
-) -> str:
+def create_access_token(subject: str | Any, expires_delta: timedelta | None = None) -> str:
     """Create JWT access token."""
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
@@ -49,18 +47,14 @@ def create_access_token(
         "iat": datetime.now(timezone.utc),
     }
 
-    encoded_jwt = jwt.encode(
-        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
-    )
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
 
 def decode_access_token(token: str) -> dict | None:
     """Decode and validate JWT access token."""
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         return payload
     except jwt.PyJWTError:
         return None

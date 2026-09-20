@@ -1,0 +1,30 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "BLE", # flake8-blind-except
+    "S",   # flake8-bandit
+]
+
+ignore = [
+    "B008", # Do not perform function call `Depends` in argument defaults (standard in FastAPI)
+    "E501", # Line length (handled by formatter / readable comments)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105"]
+"app/core/config.py" = ["S105"]
+"app/schemas/user.py" = ["S105"]
+"app/api/routes/auth.py" = ["S105", "S106"]
+"app/utils/seed_data.py" = ["S105", "S106"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+

@@ -64,11 +64,11 @@ def validate_geojson_polygon(geometry_data: dict[str, Any]) -> tuple[Polygon, fl
 
     try:
         polygon_shape = shape(geometry_data)
-    except Exception as e:
+    except (ValueError, TypeError, AttributeError) as e:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail=f"Failed to parse polygon geometry: {e!s}",
-        )
+        ) from e
 
     if not polygon_shape.is_valid:
         raise HTTPException(

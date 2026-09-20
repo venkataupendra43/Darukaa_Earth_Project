@@ -150,7 +150,7 @@ export const Login = () => {
             color: 'var(--text-muted)',
           }}
         >
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link to="/register" style={{ fontWeight: 600 }}>
             Register here
           </Link>

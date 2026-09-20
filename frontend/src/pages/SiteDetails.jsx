@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { siteService } from '../services/siteService';
 import { analyticsService } from '../services/analyticsService';
@@ -12,11 +12,6 @@ import { formatArea, formatDate, formatDateTime, formatNumber } from '../utils/f
 import {
   ArrowLeft,
   Plus,
-  Maximize2,
-  Calendar,
-  Activity,
-  Layers,
-  LineChart,
 } from 'lucide-react';
 
 export const SiteDetails = () => {
@@ -28,7 +23,7 @@ export const SiteDetails = () => {
   const [isAddMetricOpen, setIsAddMetricOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
 
-  const fetchSiteData = async () => {
+  const fetchSiteData = useCallback(async () => {
     try {
       const siteData = await siteService.getSiteById(siteId);
       setSite(siteData);
@@ -44,11 +39,11 @@ export const SiteDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [siteId]);
 
   useEffect(() => {
     fetchSiteData();
-  }, [siteId]);
+  }, [fetchSiteData]);
 
   const handleAddMetric = async (metricData) => {
     await siteService.addSiteMetric(siteId, metricData);

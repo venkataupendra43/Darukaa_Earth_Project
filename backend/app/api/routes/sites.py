@@ -54,10 +54,7 @@ def list_project_sites(
         )
 
     sites = (
-        db.query(Site)
-        .filter(Site.project_id == project_id)
-        .order_by(Site.created_at.desc())
-        .all()
+        db.query(Site).filter(Site.project_id == project_id).order_by(Site.created_at.desc()).all()
     )
     return [format_site_out(s) for s in sites]
 
@@ -103,9 +100,7 @@ def create_site(
         description=site_in.description.strip() if site_in.description else None,
         geometry=geom_db_val,
         area=calculated_area,
-        land_use_type=site_in.land_use_type.strip()
-        if site_in.land_use_type
-        else None,
+        land_use_type=site_in.land_use_type.strip() if site_in.land_use_type else None,
     )
 
     db.add(site)

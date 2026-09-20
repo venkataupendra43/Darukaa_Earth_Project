@@ -1,12 +1,14 @@
 import json
 from datetime import datetime, timedelta, timezone
+
 from sqlalchemy.orm import Session
-from app.core.database import SessionLocal, Base, engine
+
+from app.core.database import Base, SessionLocal, engine
 from app.core.security import get_password_hash
-from app.models.user import User
+from app.models.metric import SiteMetric
 from app.models.project import Project
 from app.models.site import Site
-from app.models.metric import SiteMetric
+from app.models.user import User
 from app.utils.geo_utils import validate_geojson_polygon
 
 
@@ -14,9 +16,7 @@ def seed_database(db: Session):
     """Populates development database with sample projects, sites, and synthetic metrics."""
     Base.metadata.create_all(bind=engine)
 
-    admin_user = (
-        db.query(User).filter(User.email == "admin@darukaa.earth").first()
-    )
+    admin_user = db.query(User).filter(User.email == "admin@darukaa.earth").first()
     if not admin_user:
         admin_user = User(
             full_name="Darukaa Admin User",

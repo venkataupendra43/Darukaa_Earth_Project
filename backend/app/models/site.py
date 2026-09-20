@@ -12,9 +12,7 @@ class Site(Base):
     __tablename__ = "sites"
 
     id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(
-        Integer, ForeignKey("projects.id", ondelete="CASCADE"), nullable=False
-    )
+    project_id = Column(Integer, ForeignKey("projects.id", ondelete="CASCADE"), nullable=False)
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
 
@@ -38,16 +36,14 @@ class Site(Base):
 
     # Relationships
     project = relationship("Project", back_populates="sites")
-    metrics = relationship(
-        "SiteMetric", back_populates="site", cascade="all, delete-orphan"
-    )
+    metrics = relationship("SiteMetric", back_populates="site", cascade="all, delete-orphan")
 
     def get_geojson_geometry(self):
         """Helper to get geometry dict regardless of DB engine."""
         if isinstance(self.geometry, str):
             try:
                 return json.loads(self.geometry)
-            except Exception:
+            except (json.JSONDecodeError, TypeError, ValueError):
                 return None
         elif self.geometry is not None:
             # GeoAlchemy2 WKB / WKT element or GeoJSON dict conversion
@@ -57,6 +53,6 @@ class Site(Base):
 
                 shape = to_shape(self.geometry)
                 return shapely.geometry.mapping(shape)
-            except Exception:
+            except (ImportError, TypeError, ValueError, AttributeError):
                 return None
         return None

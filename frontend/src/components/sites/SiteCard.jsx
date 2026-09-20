@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Maximize2, Trash2, ArrowRight } from 'lucide-react';
+import { Maximize2, Trash2, ArrowRight } from 'lucide-react';
 import { formatArea, formatDate } from '../../utils/formatters';
 
 export const SiteCard = ({ site, onDelete }) => {

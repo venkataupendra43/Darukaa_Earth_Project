@@ -14,7 +14,6 @@ import {
   Activity,
   Plus,
   ArrowRight,
-  Info,
 } from 'lucide-react';
 
 export const Dashboard = () => {

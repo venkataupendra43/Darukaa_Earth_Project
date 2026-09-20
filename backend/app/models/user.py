@@ -25,6 +25,4 @@ class User(Base):
     )
 
     # Relationships
-    projects = relationship(
-        "Project", back_populates="creator", cascade="all, delete-orphan"
-    )
+    projects = relationship("Project", back_populates="creator", cascade="all, delete-orphan")

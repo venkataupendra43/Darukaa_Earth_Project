@@ -14,9 +14,7 @@ class Project(Base):
     description = Column(Text, nullable=True)
     project_type = Column(String(100), nullable=False, index=True)
     location_name = Column(String(255), nullable=True)
-    created_by = Column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
-    )
+    created_by = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
@@ -29,6 +27,4 @@ class Project(Base):
 
     # Relationships
     creator = relationship("User", back_populates="projects")
-    sites = relationship(
-        "Site", back_populates="project", cascade="all, delete-orphan"
-    )
+    sites = relationship("Site", back_populates="project", cascade="all, delete-orphan")

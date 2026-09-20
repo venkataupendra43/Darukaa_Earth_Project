@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { calculatePolygonCenter, calculatePolygonBounds } from '../../utils/geojson';
-import { MapPin, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 export const SiteMap = ({ sites = [], selectedSite = null, height = '450px', interactive = true }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [mapboxSupported, setMapboxSupported] = useState(true);
   const [tokenMissing, setTokenMissing] = useState(false);
 
   const token = import.meta.env.VITE_MAPBOX_TOKEN || '';
@@ -115,7 +114,6 @@ export const SiteMap = ({ sites = [], selectedSite = null, height = '450px', int
       });
     } catch (err) {
       console.warn('Mapbox GL initialization note:', err);
-      setMapboxSupported(false);
     }
 
     return () => {
@@ -124,7 +122,7 @@ export const SiteMap = ({ sites = [], selectedSite = null, height = '450px', int
         map.current = null;
       }
     };
-  }, [sites, selectedSite, token]);
+  }, [sites, selectedSite, token, interactive]);
 
   return (
     <div className="map-wrapper" style={{ height }}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, FolderTree, MapPin, BarChart3, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, FolderTree, ShieldCheck } from 'lucide-react';
 
 export const Sidebar = () => {
   const navItems = [

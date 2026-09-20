@@ -1,7 +1,9 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, HTTPException, status
+
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.api.routes import (
@@ -23,11 +25,11 @@ async def lifespan(app: FastAPI):
         db = next(get_db())
         try:
             seed_database(db)
-        except Exception as seed_err:
+        except (SQLAlchemyError, ValueError, RuntimeError) as seed_err:
             print(f"[Seed Note] {seed_err}")
         finally:
             db.close()
-    except Exception as db_init_err:
+    except (SQLAlchemyError, RuntimeError, ValueError) as db_init_err:
         print(f"[DB Warning] {db_init_err}")
 
     yield
@@ -60,7 +62,7 @@ def health_check(db: Session = Depends(get_db)):
     db_status = "connected"
     try:
         db.execute(text("SELECT 1"))
-    except Exception as e:
+    except SQLAlchemyError as e:
         db_status = f"disconnected: {e}"
 
     return {
@@ -77,8 +79,8 @@ def trigger_seed(db: Session = Depends(get_db)):
     try:
         seed_database(db)
         return {"status": "success", "message": "Demo data populated successfully."}
-    except Exception as e:
+    except (SQLAlchemyError, ValueError, RuntimeError) as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Seed error: {e}",
-        )
+        ) from e

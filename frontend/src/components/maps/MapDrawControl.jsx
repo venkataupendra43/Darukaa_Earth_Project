@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import { Pencil, Trash2, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { Trash2, CheckCircle2, Sparkles } from 'lucide-react';
 
 export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const drawRef = useRef(null);
   const [polygonDrawn, setPolygonDrawn] = useState(false);
-  const [useFallbackInputs, setUseFallbackInputs] = useState(false);
-  const [coordText, setCoordText] = useState('');
 
   const token = import.meta.env.VITE_MAPBOX_TOKEN || '';
 
@@ -47,10 +45,10 @@ export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
     },
   ];
 
-  const updateGeoJSON = (geojson) => {
+  const updateGeoJSON = useCallback((geojson) => {
     setPolygonDrawn(true);
     onPolygonChange(geojson);
-  };
+  }, [onPolygonChange]);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -104,8 +102,7 @@ export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
         });
       }
     } catch (err) {
-      console.warn('Mapbox Draw init notice, using fallback mode:', err);
-      setUseFallbackInputs(true);
+      console.warn('Mapbox Draw init notice:', err);
     }
 
     return () => {
@@ -114,7 +111,7 @@ export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
         map.current = null;
       }
     };
-  }, [token]);
+  }, [token, initialGeometry, onPolygonChange, updateGeoJSON]);
 
   const handleSelectSample = (sample) => {
     const geojson = {
@@ -130,7 +127,6 @@ export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
       });
     }
 
-    setCoordText(JSON.stringify(sample.coords, null, 2));
     updateGeoJSON(geojson);
   };
 
@@ -139,7 +135,6 @@ export const MapDrawControl = ({ onPolygonChange, initialGeometry = null }) => {
       drawRef.current.deleteAll();
     }
     setPolygonDrawn(false);
-    setCoordText('');
     onPolygonChange(null);
   };
 

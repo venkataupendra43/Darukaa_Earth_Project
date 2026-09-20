@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { projectService } from '../services/projectService';
 import { siteService } from '../services/siteService';
@@ -14,7 +14,6 @@ import {
   MapPin,
   Trees,
   Maximize2,
-  Calendar,
   Layers,
   Trash2,
 } from 'lucide-react';
@@ -28,7 +27,7 @@ export const ProjectDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isAddSiteOpen, setIsAddSiteOpen] = useState(false);
 
-  const fetchProjectData = async () => {
+  const fetchProjectData = useCallback(async () => {
     try {
       const proj = await projectService.getProjectById(projectId);
       setProject(proj);
@@ -39,11 +38,11 @@ export const ProjectDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [projectId]);
 
   useEffect(() => {
     fetchProjectData();
-  }, [projectId]);
+  }, [fetchProjectData]);
 
   const handleAddSite = async (siteData) => {
     await siteService.createSite(projectId, siteData);
