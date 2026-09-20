@@ -1,0 +1,45 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.eslintcache
+
+# Python & Backend
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+backend/__pycache__/
+backend/venv/
+backend/.pytest_cache/
+backend/*.db
+backend/*.sqlite3
+.ruff_cache/
+
+# Database Data Volumes
+database_data/
+pgdata/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Antigravity Brain Logs & Temporary Scratch
+.gemini/
+scratch/

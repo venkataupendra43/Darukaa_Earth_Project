@@ -1,0 +1,8 @@
+{
+  "frontend/src/**/*.{js,jsx,json,css}": [
+    "prettier --write"
+  ],
+  "backend/**/*.py": [
+    "ruff check"
+  ]
+}
